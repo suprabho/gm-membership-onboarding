@@ -10,6 +10,7 @@ const stepOrder = [
   "/onboarding/audience",
   "/onboarding/goals",
   "/onboarding/plan",
+  "/onboarding/checkout",
   "/onboarding/handoff",
 ];
 
@@ -22,6 +23,8 @@ export default function OnboardingLayout({
   const totalSteps = stepOrder.length - 1;
   const currentIndex = stepOrder.findIndex((p) => pathname?.startsWith(p));
   const step = Math.min(totalSteps, Math.max(1, currentIndex + 1));
+  // Hide the progress bar on the handoff step — it's a terminal screen, not
+  // a stop along the path.
   const isHandoff = pathname?.startsWith("/onboarding/handoff");
   // The intro is a pre-flow tour, not a numbered step — hide the progress bar.
   const isIntro = pathname?.startsWith("/onboarding/intro");

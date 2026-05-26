@@ -10,7 +10,11 @@ export type AnalyticsEvent =
   | "onboarding_step_completed"
   | "handoff_initiated"
   | "course_card_clicked"
-  | "faq_opened";
+  | "faq_opened"
+  | "checkout_opened"
+  | "checkout_succeeded"
+  | "checkout_failed"
+  | "checkout_dismissed";
 
 export function track(
   event: AnalyticsEvent,
