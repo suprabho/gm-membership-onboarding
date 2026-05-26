@@ -16,7 +16,7 @@ export const footerSections: Array<{ title: string; links: NavLink[] }> = [
     links: [
       { href: "/courses", label: "Course Library" },
       { href: "/pricing", label: "Pricing" },
-      { href: "/onboarding/welcome", label: "Get Started" },
+      { href: "/onboarding/intro", label: "Get Started" },
     ],
   },
   {

@@ -5,5 +5,5 @@ import { redirect } from "next/navigation";
  * like `/signup` from external places land in the right place.
  */
 export default function SignupPage() {
-  redirect("/onboarding/welcome");
+  redirect("/onboarding/intro");
 }
