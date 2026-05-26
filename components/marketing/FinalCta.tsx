@@ -43,7 +43,7 @@ export function FinalCta() {
               size="lg"
               iconRight={<ArrowRight size={18} weight="bold" />}
             >
-              <Link href="/onboarding/welcome">Start Your Journey</Link>
+              <Link href="/onboarding/intro">Start Your Journey</Link>
             </Button>
             <Button asChild variant="ghost-dark" size="lg">
               <Link href="/pricing">See Pricing</Link>

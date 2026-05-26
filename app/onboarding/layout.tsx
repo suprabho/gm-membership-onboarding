@@ -23,6 +23,9 @@ export default function OnboardingLayout({
   const currentIndex = stepOrder.findIndex((p) => pathname?.startsWith(p));
   const step = Math.min(totalSteps, Math.max(1, currentIndex + 1));
   const isHandoff = pathname?.startsWith("/onboarding/handoff");
+  // The intro is a pre-flow tour, not a numbered step — hide the progress bar.
+  const isIntro = pathname?.startsWith("/onboarding/intro");
+  const hideProgress = isHandoff || isIntro;
 
   return (
     <div className="flex min-h-screen flex-col bg-section-fade">
@@ -37,13 +40,13 @@ export default function OnboardingLayout({
               />
               <SubBrand className="hidden sm:inline" />
             </div>
-            {!isHandoff ? (
+            {!hideProgress ? (
               <div className="hidden w-64 sm:block">
                 <ProgressBar step={step} total={totalSteps} />
               </div>
             ) : null}
           </div>
-          {!isHandoff ? (
+          {!hideProgress ? (
             <div className="pb-4 sm:hidden">
               <ProgressBar step={step} total={totalSteps} />
             </div>

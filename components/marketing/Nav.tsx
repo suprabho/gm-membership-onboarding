@@ -70,7 +70,7 @@ export function Nav() {
               <Link href="/login">Log in</Link>
             </Button>
             <Button asChild variant="primary" size="md">
-              <Link href="/onboarding/welcome">Get Started</Link>
+              <Link href="/onboarding/intro">Get Started</Link>
             </Button>
           </div>
 
@@ -109,7 +109,7 @@ export function Nav() {
                   <Link href="/login">Log in</Link>
                 </Button>
                 <Button asChild variant="primary" size="md">
-                  <Link href="/onboarding/welcome">Get Started</Link>
+                  <Link href="/onboarding/intro">Get Started</Link>
                 </Button>
               </div>
             </nav>

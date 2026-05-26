@@ -28,7 +28,7 @@ export function AudienceSelector() {
             return (
               <Link
                 key={audience.id}
-                href={`/onboarding/welcome?segment=${audience.id}`}
+                href={`/onboarding/intro?segment=${audience.id}`}
                 onClick={() =>
                   track("audience_card_clicked", { segment: audience.id })
                 }

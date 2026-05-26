@@ -103,7 +103,7 @@ export function PricingSnapshot({ compact = false }: PricingSnapshotProps) {
                   className="w-full"
                 >
                   <Link
-                    href={`/onboarding/welcome?plan=${plan.id}`}
+                    href={`/onboarding/intro?plan=${plan.id}`}
                     onClick={() =>
                       track("pricing_cta_clicked", { plan: plan.id })
                     }
