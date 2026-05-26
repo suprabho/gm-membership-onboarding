@@ -100,7 +100,7 @@ function WelcomeForm() {
         />
 
         <BottomNav
-          backHref="/"
+          backHref="/onboarding/intro"
           onContinue={handleSubmit}
           continueDisabled={touched && !canContinue}
         />
