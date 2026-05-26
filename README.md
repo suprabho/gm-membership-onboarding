@@ -40,10 +40,14 @@ The app runs on `http://localhost:3000`. Saves hot-reload via Turbopack.
 | `/onboarding/audience`     | Segment (`student` / `mid-career` / `business-leader`)    |
 | `/onboarding/goals`        | Multi-select goals                                        |
 | `/onboarding/plan`         | Plan + monthly/annual                                     |
+| `/onboarding/checkout`     | Razorpay Subscriptions checkout (modal)                   |
 | `/onboarding/handoff`      | POST `/api/lead`, redirect to Learnyst                    |
 | `/login`                   | Redirects to Learnyst login                               |
 | `/signup`                  | Redirects to `/onboarding/welcome`                        |
 | `POST /api/lead`           | Validates onboarding payload (Zod), logs to console       |
+| `POST /api/razorpay/subscription` | Server-creates a Razorpay subscription              |
+| `POST /api/razorpay/verify`       | Verifies the HMAC signature from Checkout           |
+| `POST /api/razorpay/webhook`      | Razorpay → us. Verifies signature, logs event       |
 | `GET/POST /api/learnyst/sso` | Stub for v2 SSO (returns 501)                           |
 
 Deep-link pre-fills: `/onboarding/welcome?segment=mid-career&plan=professional`.
@@ -53,17 +57,45 @@ Deep-link pre-fills: `/onboarding/welcome?segment=mid-career&plan=professional`.
 - [`lib/learnyst/client.ts`](lib/learnyst/client.ts) — the **only** place that
   builds the Learnyst URL. v1 constructs prefill query params; v2 will call the
   SSO endpoint and return a one-time URL. Callers stay identical.
+- [`lib/razorpay/`](lib/razorpay/) — payment seam. `client.ts` is server-only
+  (creates subscriptions, verifies signatures); `config.ts` resolves plan ids
+  from env vars; `types.ts` is shared with the client.
 - [`lib/store/onboarding.ts`](lib/store/onboarding.ts) — single Zustand store,
-  persisted under `gm-onboarding` in `localStorage`.
+  persisted under `gm-onboarding` in `localStorage`. Tracks Razorpay
+  `subscriptionId` / `paymentId` / `paymentStatus` alongside the onboarding
+  answers.
 - [`lib/data/`](lib/data/) — every piece of changeable copy lives here.
 
 ## Environment
 
+See [`.env.example`](.env.example) for the full list. Copy it to `.env.local`
+and fill in values from the Razorpay dashboard before running.
+
 ```
 NEXT_PUBLIC_LEARNYST_BASE_URL=https://learn.greenmentor.academy
+
+# Razorpay — payment seam. Keys live in test mode until launch.
+RAZORPAY_KEY_ID=…
+RAZORPAY_KEY_SECRET=…           # server only
+NEXT_PUBLIC_RAZORPAY_KEY_ID=…   # mirror, for Checkout SDK
+RAZORPAY_WEBHOOK_SECRET=…
+RAZORPAY_PLAN_LEARNER_MONTHLY=plan_…
+RAZORPAY_PLAN_LEARNER_ANNUAL=plan_…
+RAZORPAY_PLAN_PROFESSIONAL_MONTHLY=plan_…
+RAZORPAY_PLAN_PROFESSIONAL_ANNUAL=plan_…
 ```
 
-Override when pointing at a Learnyst staging school. Defaults to production.
+### Payment flow
+
+```
+/plan ─► /checkout ──► POST /api/razorpay/subscription   (server creates sub)
+                  ──► Razorpay Checkout (modal)
+                  ──► POST /api/razorpay/verify          (HMAC check)
+                  ──► /handoff                            (Learnyst redirect)
+```
+
+The webhook (`/api/razorpay/webhook`) is the source of truth for subscription
+lifecycle — wire it to Learnyst enrolment / revocation in v2.
 
 ## Design system
 
@@ -140,16 +172,21 @@ Search the codebase for `TODO[` to find these in context.
    and **Ulm Grotesk** `.woff2` files into `/public/fonts/` and add an
    `@font-face` block in `globals.css`. Hero titles and 96px stats will look
    meaningfully sharper.
-8. **Razorpay vs Learnyst payment layer** — confirm with Learnyst whether
-   their checkout already wraps Razorpay or whether we need a separate
-   payment step before handoff.
-9. **`POST /api/lead`** — v1 logs to console. Wire to a CRM or a Slack
+8. **Razorpay plan ids** — create the four plans in the Razorpay dashboard
+   (Learner Monthly/Annual, Professional Monthly/Annual) and drop the ids into
+   `.env.local` under the `RAZORPAY_PLAN_*` keys. The `/checkout` step fails
+   loudly in dev with the missing env-var name if any are absent.
+9. **Razorpay webhook → Learnyst enrolment** — `/api/razorpay/webhook`
+   currently verifies signature + logs. Wire `subscription.activated` to
+   create/enrol the Learnyst user and `subscription.cancelled` / `halted` to
+   revoke access.
+10. **`POST /api/lead`** — v1 logs to console. Wire to a CRM or a Slack
    webhook before launch.
-10. **SSO endpoint** — implement `/api/learnyst/sso` against the Learnyst
+11. **SSO endpoint** — implement `/api/learnyst/sso` against the Learnyst
     SSO API to enable v2 zero-friction handoff.
-11. **Analytics** — [`lib/utils/analytics.ts`](lib/utils/analytics.ts) is a
+12. **Analytics** — [`lib/utils/analytics.ts`](lib/utils/analytics.ts) is a
     console stub. Wire to PostHog or Mixpanel before launch.
-12. **Additional partner logos** — EY, L&T, BPCL, BCG, CRISIL, EKi were
+13. **Additional partner logos** — EY, L&T, BPCL, BCG, CRISIL, EKi were
     referenced in the deck but the binaries were not bundled. Source the
     SVGs and add to `/public/brand/`.
 

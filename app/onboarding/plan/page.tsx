@@ -31,7 +31,7 @@ export default function PlanStep() {
       planId,
       billingCycle,
     });
-    router.push("/onboarding/handoff");
+    router.push("/onboarding/checkout");
   }
 
   return (

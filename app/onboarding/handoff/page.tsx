@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle } from "@phosphor-icons/react/dist/ssr";
 import { useOnboarding } from "@/lib/store/onboarding";
@@ -12,16 +13,39 @@ import { track } from "@/lib/utils/analytics";
 const SPINNER_MS = 1200;
 
 export default function HandoffStep() {
+  const router = useRouter();
   const name = useOnboarding((s) => s.name);
+  const paymentStatus = useOnboarding((s) => s.paymentStatus);
 
   const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
   const [phase, setPhase] = useState<"loading" | "redirecting" | "fallback">(
     "loading",
   );
+  const [hydrated, setHydrated] = useState(false);
   const ranRef = useRef(false);
 
+  // Wait for the persisted store to rehydrate before checking paymentStatus —
+  // otherwise the guard fires against the default `idle` state and we bounce
+  // back to /checkout on first paint.
   useEffect(() => {
+    if (useOnboarding.persist.hasHydrated()) {
+      setHydrated(true);
+      return;
+    }
+    const unsub = useOnboarding.persist.onFinishHydration(() =>
+      setHydrated(true),
+    );
+    return unsub;
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
     if (ranRef.current) return;
+    // Guard: only run the handoff after Razorpay payment has been verified.
+    if (paymentStatus !== "paid") {
+      router.replace("/onboarding/checkout");
+      return;
+    }
     ranRef.current = true;
 
     const state = useOnboarding.getState();
@@ -45,7 +69,12 @@ export default function HandoffStep() {
     fetch("/api/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...payload, billingCycle: state.billingCycle }),
+      body: JSON.stringify({
+        ...payload,
+        billingCycle: state.billingCycle,
+        razorpaySubscriptionId: state.razorpaySubscriptionId,
+        razorpayPaymentId: state.razorpayPaymentId,
+      }),
       keepalive: true,
     }).catch(() => {
       // best-effort
@@ -60,7 +89,7 @@ export default function HandoffStep() {
     }, SPINNER_MS);
 
     return () => window.clearTimeout(showSuccess);
-  }, []);
+  }, [hydrated, paymentStatus, router]);
 
   return (
     <motion.div
@@ -76,10 +105,10 @@ export default function HandoffStep() {
             className="size-14 animate-spin rounded-full border-2 border-green-500/30 border-t-green-500"
           />
           <h1 className="font-display mt-8 text-[28px] leading-tight tracking-[-0.02em] text-ink md:text-[40px]">
-            Setting up your account…
+            Activating your membership…
           </h1>
           <p className="mt-4 max-w-md text-[16px] text-gray-700">
-            We&apos;re prepping a personalized checkout on Learnyst with your
+            Payment confirmed. We&apos;re passing you to Learnyst with your
             preferences pre-filled.
           </p>
         </>
@@ -98,7 +127,7 @@ export default function HandoffStep() {
           </h1>
           <p className="mt-4 max-w-md text-[16px] text-gray-700">
             {phase === "redirecting"
-              ? "Redirecting you to Learnyst to complete checkout…"
+              ? "Redirecting you to Learnyst to start learning…"
               : "If you weren't redirected automatically, use the button below."}
           </p>
           {redirectUrl ? (
