@@ -50,7 +50,7 @@ The app runs on `http://localhost:3000`. Saves hot-reload via Turbopack.
 | `POST /api/razorpay/webhook`      | Razorpay → us. Verifies signature, logs event       |
 | `GET/POST /api/learnyst/sso` | Stub for v2 SSO (returns 501)                           |
 
-Deep-link pre-fills: `/onboarding/welcome?segment=mid-career&plan=professional`.
+Deep-link pre-fills: `/onboarding/welcome?segment=mid-career&plan=membership&cycle=annual`.
 
 ## Architecture seams
 
@@ -79,10 +79,8 @@ RAZORPAY_KEY_ID=…
 RAZORPAY_KEY_SECRET=…           # server only
 NEXT_PUBLIC_RAZORPAY_KEY_ID=…   # mirror, for Checkout SDK
 RAZORPAY_WEBHOOK_SECRET=…
-RAZORPAY_PLAN_LEARNER_MONTHLY=plan_…
-RAZORPAY_PLAN_LEARNER_ANNUAL=plan_…
-RAZORPAY_PLAN_PROFESSIONAL_MONTHLY=plan_…
-RAZORPAY_PLAN_PROFESSIONAL_ANNUAL=plan_…
+RAZORPAY_PLAN_MEMBERSHIP_MONTHLY=plan_…
+RAZORPAY_PLAN_MEMBERSHIP_ANNUAL=plan_…
 ```
 
 ### Payment flow
@@ -172,10 +170,10 @@ Search the codebase for `TODO[` to find these in context.
    and **Ulm Grotesk** `.woff2` files into `/public/fonts/` and add an
    `@font-face` block in `globals.css`. Hero titles and 96px stats will look
    meaningfully sharper.
-8. **Razorpay plan ids** — create the four plans in the Razorpay dashboard
-   (Learner Monthly/Annual, Professional Monthly/Annual) and drop the ids into
-   `.env.local` under the `RAZORPAY_PLAN_*` keys. The `/checkout` step fails
-   loudly in dev with the missing env-var name if any are absent.
+8. **Razorpay plan ids** — create the two plans in the Razorpay dashboard
+   (Membership Monthly, Membership Annual) and drop the ids into `.env.local`
+   under the `RAZORPAY_PLAN_*` keys. The `/checkout` step fails loudly in dev
+   with the missing env-var name if any are absent.
 9. **Razorpay webhook → Learnyst enrolment** — `/api/razorpay/webhook`
    currently verifies signature + logs. Wire `subscription.activated` to
    create/enrol the Learnyst user and `subscription.cancelled` / `halted` to

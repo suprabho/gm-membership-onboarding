@@ -22,14 +22,40 @@ interface PricingSnapshotProps {
   compact?: boolean;
 }
 
+// Marketing-side pricing block. Mirrors the onboarding /plan step: one
+// membership, two side-by-side billing-cycle cards. Each card deep-links to
+// /onboarding/welcome with both plan + cycle preselected so the onboarding
+// store can skip ahead.
 export function PricingSnapshot({ compact = false }: PricingSnapshotProps) {
+  const plan = plans[0];
+
+  const cycleCards = [
+    {
+      cycle: "monthly" as const,
+      title: "Monthly",
+      subtitle: "Billed every month. Cancel any time.",
+      price: plan.priceMonthly,
+      priceSuffix: "/ month",
+      footnote: "Same access. Try it without the annual commit.",
+      highlight: false,
+      ctaLabel: "Start monthly",
+    },
+    {
+      cycle: "annual" as const,
+      title: "Annual",
+      subtitle: "Billed once a year. Best value.",
+      price: plan.priceAnnual,
+      priceSuffix: "/ month, billed yearly",
+      footnote: `${formatINR(plan.priceAnnual * 12)} billed once · ${formatINR(plan.priceMonthly - plan.priceAnnual)} saved per month.`,
+      highlight: true,
+      ctaLabel: "Start annual",
+    },
+  ];
+
   return (
     <section
       id="pricing"
-      className={cn(
-        "bg-section-fade",
-        compact ? "py-20" : "py-24 md:py-28",
-      )}
+      className={cn("bg-section-fade", compact ? "py-20" : "py-24 md:py-28")}
     >
       <Container width="wide">
         <SectionHeader
@@ -46,40 +72,38 @@ export function PricingSnapshot({ compact = false }: PricingSnapshotProps) {
         />
 
         <div className="mx-auto mt-16 grid max-w-4xl gap-6 md:grid-cols-2">
-          {plans.map((plan) => (
+          {cycleCards.map((card) => (
             <div
-              key={plan.id}
+              key={card.cycle}
               className={cn(
                 "relative flex flex-col rounded-[20px] border bg-white p-8",
-                plan.highlight
+                card.highlight
                   ? "border-green-700 shadow-lift"
                   : "border-gray-200",
               )}
             >
-              {plan.badge ? (
+              {card.highlight ? (
                 <span className="absolute -top-3 left-8">
-                  <Badge tone="neon">{plan.badge}</Badge>
+                  <Badge tone="neon">Save {annualSavingsPercent}%</Badge>
                 </span>
               ) : null}
 
               <div>
-                <h3 className="text-[28px] font-bold text-ink">{plan.name}</h3>
+                <h3 className="text-[28px] font-bold text-ink">{card.title}</h3>
                 <p className="mt-2 text-[15px] text-gray-700">
-                  {plan.tagline}
+                  {card.subtitle}
                 </p>
               </div>
 
               <div className="mt-6 flex items-baseline gap-2">
                 <span className="font-numeral text-[56px] leading-none text-green-700">
-                  {formatINR(plan.priceAnnual)}
+                  {formatINR(card.price)}
                 </span>
                 <span className="text-[13px] text-gray-500">
-                  / month, billed annually
+                  {card.priceSuffix}
                 </span>
               </div>
-              <p className="mt-1 text-[14px] text-gray-500">
-                or {formatINR(plan.priceMonthly)} / month
-              </p>
+              <p className="mt-1 text-[13px] text-gray-500">{card.footnote}</p>
 
               <ul className="mt-6 space-y-3 border-t border-gray-200 pt-6">
                 {plan.features.map((feature) => (
@@ -98,17 +122,20 @@ export function PricingSnapshot({ compact = false }: PricingSnapshotProps) {
               <div className="mt-8">
                 <Button
                   asChild
-                  variant={plan.highlight ? "primary" : "outline"}
+                  variant={card.highlight ? "primary" : "outline"}
                   size="lg"
                   className="w-full"
                 >
                   <Link
-                    href={`/onboarding/welcome?plan=${plan.id}`}
+                    href={`/onboarding/welcome?plan=${plan.id}&cycle=${card.cycle}`}
                     onClick={() =>
-                      track("pricing_cta_clicked", { plan: plan.id })
+                      track("pricing_cta_clicked", {
+                        plan: plan.id,
+                        cycle: card.cycle,
+                      })
                     }
                   >
-                    {plan.ctaLabel}
+                    {card.ctaLabel}
                   </Link>
                 </Button>
               </div>

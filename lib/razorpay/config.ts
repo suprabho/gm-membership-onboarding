@@ -9,8 +9,8 @@
  *  - RAZORPAY_KEY_SECRET        — server only, never exposed
  *  - RAZORPAY_WEBHOOK_SECRET    — server only, used to verify webhook payloads
  *  - RAZORPAY_PLAN_<PLAN>_<CYCLE> — one per (planId × billingCycle), created
- *    in the Razorpay dashboard. PLAN ∈ {LEARNER, PROFESSIONAL},
- *    CYCLE ∈ {MONTHLY, ANNUAL}.
+ *    in the Razorpay dashboard. PLAN ∈ {MEMBERSHIP} (single tier — see
+ *    lib/data/plans.ts), CYCLE ∈ {MONTHLY, ANNUAL}.
  *
  * TODO[Razorpay]: create the four plans in the Razorpay dashboard and drop the
  * ids into `.env.local`. Without them, the create-subscription endpoint

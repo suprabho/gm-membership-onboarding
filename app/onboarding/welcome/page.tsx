@@ -20,6 +20,7 @@ function QueryParamSync() {
   const searchParams = useSearchParams();
   const setSegment = useOnboarding((s) => s.setSegment);
   const setPlan = useOnboarding((s) => s.setPlan);
+  const setBillingCycle = useOnboarding((s) => s.setBillingCycle);
 
   useEffect(() => {
     const querySegment = searchParams.get("segment");
@@ -30,7 +31,11 @@ function QueryParamSync() {
     if (queryPlan) {
       setPlan(queryPlan);
     }
-  }, [searchParams, setSegment, setPlan]);
+    const queryCycle = searchParams.get("cycle");
+    if (queryCycle === "monthly" || queryCycle === "annual") {
+      setBillingCycle(queryCycle);
+    }
+  }, [searchParams, setSegment, setPlan, setBillingCycle]);
 
   return null;
 }
