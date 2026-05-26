@@ -43,10 +43,10 @@ export function PricingSnapshot({ compact = false }: PricingSnapshotProps) {
     {
       cycle: "annual" as const,
       title: "Annual",
-      subtitle: "Billed once a year. Best value.",
+      subtitle: "Billed once a year. Adds Career Services. Best value.",
       price: plan.priceAnnual,
       priceSuffix: "/ month, billed yearly",
-      footnote: `${formatINR(plan.priceAnnual * 12)} billed once · ${formatINR(plan.priceMonthly - plan.priceAnnual)} saved per month.`,
+      footnote: `${formatINR(plan.priceAnnualTotal)} billed once · ${formatINR(plan.priceMonthly - plan.priceAnnual)} saved per month.`,
       highlight: true,
       ctaLabel: "Start annual",
     },
@@ -66,7 +66,7 @@ export function PricingSnapshot({ compact = false }: PricingSnapshotProps) {
               <span className="text-green-700">Whole library.</span>
             </>
           }
-          description={`Affordable for Consultants & SMEs. Save ${annualSavingsPercent}% with annual. Cancel anytime before your next cycle.`}
+          description={`Pick how you want to be billed. Annual saves ${annualSavingsPercent}% and bundles Career Services. Cancel anytime before your next cycle.`}
           align="center"
           className="text-center"
         />
@@ -127,7 +127,7 @@ export function PricingSnapshot({ compact = false }: PricingSnapshotProps) {
                   className="w-full"
                 >
                   <Link
-                    href={`/onboarding/intro?plan=${plan.id}`}
+                    href={`/onboarding/welcome?plan=${plan.id}&cycle=${card.cycle}`}
                     onClick={() =>
                       track("pricing_cta_clicked", {
                         plan: plan.id,

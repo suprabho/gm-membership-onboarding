@@ -28,12 +28,12 @@ export function FinalCta() {
           <Eyebrow tone="teal">Get Started</Eyebrow>
 
           <h2 className="font-display mt-8 text-[40px] leading-tight text-white md:text-[64px]">
-            Bridge the ESG skills gap.{" "}
-            <span className="text-green-500">Start this week.</span>
+            Start your ESG journey{" "}
+            <span className="text-green-500">today.</span>
           </h2>
           <p className="mt-6 max-w-2xl text-[18px] leading-relaxed text-white/85 md:text-[20px]">
-            Five minutes of questions, then onto the library. Affordable for
-            Consultants &amp; SMEs.
+            Join 5,000+ sustainability professionals already learning with
+            Greenmentor. Cancel anytime.
           </p>
 
           <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
@@ -43,12 +43,18 @@ export function FinalCta() {
               size="lg"
               iconRight={<ArrowRight size={18} weight="bold" />}
             >
-              <Link href="/onboarding/intro">Start Your Journey</Link>
+              <Link href="/onboarding/intro">
+                Get Plus Essential — ₹4,000 / month
+              </Link>
             </Button>
             <Button asChild variant="ghost-dark" size="lg">
-              <Link href="/pricing">See Pricing</Link>
+              <Link href="/pricing">See annual plan</Link>
             </Button>
           </div>
+
+          <p className="mt-6 text-[13px] text-green-100">
+            Annual plan with Career Services included — ₹44,000 / year.
+          </p>
         </div>
       </Container>
     </section>

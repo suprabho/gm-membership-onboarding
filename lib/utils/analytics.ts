@@ -14,7 +14,8 @@ export type AnalyticsEvent =
   | "checkout_opened"
   | "checkout_succeeded"
   | "checkout_failed"
-  | "checkout_dismissed";
+  | "checkout_dismissed"
+  | "hiring_companies_expanded";
 
 export function track(
   event: AnalyticsEvent,
