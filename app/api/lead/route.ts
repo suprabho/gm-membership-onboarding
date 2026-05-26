@@ -16,6 +16,8 @@ const LeadSchema = z.object({
   planId: z.string().nullable().optional(),
   goals: z.array(z.string()).default([]),
   billingCycle: z.enum(["monthly", "annual"]).optional(),
+  razorpaySubscriptionId: z.string().nullable().optional(),
+  razorpayPaymentId: z.string().nullable().optional(),
 });
 
 export async function POST(request: Request) {

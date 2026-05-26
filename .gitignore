@@ -28,8 +28,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files
+# env files — .env.example documents the required shape, keep it tracked
 .env*
+!.env.example
 
 # vercel
 .vercel

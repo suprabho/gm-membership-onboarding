@@ -1,65 +1,60 @@
 /**
- * Plus Essential — the single Greenmentor Plus subscription. The v3 reframe
- * collapsed the two-tier (Learner / Professional) model into one plan with
- * a monthly and an annual billing option; the annual adds Career Services.
+ * Subscription plan for GM Academy.
  *
- * Numbers shown to users:
- *   ₹4,000 / month  (monthly billing)
- *   ₹44,000 / year  (annual billing — ~8% saving + Career Services)
+ * v3: single membership tier sold in two billing cycles (monthly / annual).
+ * Prices reflect the Plus Essential reframe — ₹4,000/month or ₹44,000/year
+ * (the annual saves two months and bundles Career Services).
+ *
+ * The `plans` array stays as an array of one — keeping the data shape lets
+ * existing `.map` consumers (PricingSnapshot, checkout summary) work
+ * unchanged, and leaves room for adding tiers later without restructuring.
+ *
+ * NOTE: changing `id` from "membership" will break the Razorpay env-var
+ * lookup (`RAZORPAY_PLAN_${id.toUpperCase()}_${cycle}`). Keep it stable.
  */
 
 export interface Plan {
   id: string;
   name: string;
   tagline: string;
-  /** Per-month price if user pays monthly. */
+  /** Per-month price when billed monthly. */
   priceMonthly: number;
-  /** Per-month price when paid annually (annualTotal / 12, rounded). */
+  /** Per-month price when billed annually (annualTotal / 12, rounded). */
   priceAnnual: number;
-  /** Total billed at purchase time for the annual cycle. */
-  annualTotal: number;
+  /** Total charged once at the annual checkout. Drives the "billed once"
+   *  footnote so the displayed total stays clean (₹44,000) instead of the
+   *  rounding-noisy `priceAnnual * 12`. */
+  priceAnnualTotal: number;
   badge?: string;
   features: string[];
   ctaLabel: string;
   highlight?: boolean;
 }
 
-const monthlyFeatures = [
-  "Full course library — 8 courses, all included",
-  "Bi-weekly live Q&A with practitioners",
-  "40,000+ learner WhatsApp community",
-  "Weekly industry insights & case studies",
-  "Curated ESG jobs community access",
-];
-
 export const plans: Plan[] = [
   {
-    id: "plus-monthly",
-    name: "Plus Essential — Monthly",
-    tagline: "Everything you need, billed every month. Cancel anytime.",
-    priceMonthly: 4000,
-    priceAnnual: 4000,
-    annualTotal: 48000,
-    features: monthlyFeatures,
-    ctaLabel: "Start for ₹4,000 / month",
-  },
-  {
-    id: "plus-annual",
-    name: "Plus Essential — Annual",
+    id: "membership",
+    name: "GM Academy Plus Essential",
     tagline:
-      "Everything in monthly, plus personalised Career Services. Best value.",
+      "One subscription. Every course, live sessions, the community, jobs feed and career guidance.",
     priceMonthly: 4000,
     priceAnnual: Math.round(44000 / 12),
-    annualTotal: 44000,
-    badge: "Best value",
+    priceAnnualTotal: 44000,
     highlight: true,
     features: [
-      ...monthlyFeatures,
+      "Full library — 8 courses, all included",
+      "Bi-weekly live Q&A with practitioners",
+      "40,000+ learner WhatsApp community",
+      "Weekly industry insights & case studies",
+      "Curated ESG jobs community access",
       "Personalised career guidance & resume review",
-      "Two months free vs. paying monthly",
     ],
-    ctaLabel: "Get the Annual plan — ₹44,000",
+    ctaLabel: "Start membership",
   },
 ];
 
+/**
+ * Annual saves two months vs. paying monthly:
+ *   (4000 × 12 − 44000) / (4000 × 12) ≈ 8.33%
+ */
 export const annualSavingsPercent = 8;
