@@ -7,13 +7,30 @@ import { SectionHeader } from "@/components/marketing/SectionHeader";
 import {
   topHiringCompanies,
   moreHiringCompanies,
+  type HiringCompany,
 } from "@/lib/data/hiring-companies";
 import { track } from "@/lib/utils/analytics";
+import { cn } from "@/lib/utils/cn";
+
+/** A single company logo on a white tile, rendered in its natural brand colours. */
+function LogoTile({ company }: { company: HiringCompany }) {
+  return (
+    <span className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white px-5 py-3">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={company.logo}
+        alt={company.name}
+        loading="lazy"
+        className={cn("h-7 w-auto object-contain md:h-8", company.className)}
+      />
+    </span>
+  );
+}
 
 /**
- * "Where our learners go" — top-10 hiring companies always visible, plus a
- * progressive-disclosure long-tail of 40 more, expandable inline. The
- * gray secondary pills mirror the v3 HTML's `.co-pill-gray` device.
+ * "Where our learners go" — the prominent hiring companies always visible as a
+ * natural-colour logo wall, plus a progressive-disclosure long tail expandable
+ * inline. Scoped to companies we hold a logo for (see hiring-companies.ts).
  */
 export function HiringCompanies() {
   const [open, setOpen] = useState(false);
@@ -37,26 +54,16 @@ export function HiringCompanies() {
 
         <div className="mt-14 rounded-[20px] border border-gray-200 bg-section-fade p-6 md:p-8">
           <p className="gm-eyebrow text-green-700">Top hiring companies</p>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap items-center gap-2.5">
             {topHiringCompanies.map((co) => (
-              <span
-                key={co}
-                className="rounded-full bg-green-100 px-3 py-1.5 text-[13px] font-semibold text-teal-900"
-              >
-                {co}
-              </span>
+              <LogoTile key={co.name} company={co} />
             ))}
           </div>
 
           {open ? (
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-2.5 flex flex-wrap items-center gap-2.5">
               {moreHiringCompanies.map((co) => (
-                <span
-                  key={co}
-                  className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-[13px] text-gray-700"
-                >
-                  {co}
-                </span>
+                <LogoTile key={co.name} company={co} />
               ))}
             </div>
           ) : null}

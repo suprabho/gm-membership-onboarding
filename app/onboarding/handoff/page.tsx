@@ -10,6 +10,7 @@ import { buildHandoffUrl } from "@/lib/learnyst/client";
 import { plans } from "@/lib/data/plans";
 import { Button } from "@/components/ui/Button";
 import { track } from "@/lib/utils/analytics";
+import { syncLead } from "@/lib/lead/sync";
 
 const SPINNER_MS = 1200;
 
@@ -84,19 +85,9 @@ export default function HandoffStep() {
       goals: payload.goals.length,
     });
 
-    fetch("/api/lead", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...payload,
-        billingCycle: state.billingCycle,
-        razorpaySubscriptionId: state.razorpaySubscriptionId,
-        razorpayPaymentId: state.razorpayPaymentId,
-      }),
-      keepalive: true,
-    }).catch(() => {
-      // best-effort
-    });
+    // Finalize the lead row: paymentStatus is "paid" here, so syncLead marks
+    // it "completed" with the Razorpay subscription + payment ids.
+    syncLead("handoff");
 
     const showSuccess = window.setTimeout(() => {
       setPhase("redirecting");
@@ -122,10 +113,10 @@ export default function HandoffStep() {
             aria-hidden
             className="size-14 animate-spin rounded-full border-2 border-green-500/30 border-t-green-500"
           />
-          <h1 className="font-display mt-8 text-[28px] leading-tight tracking-[-0.02em] text-ink md:text-[40px]">
+          <h1 className="font-display mt-8 text-[28px] leading-tight tracking-[-0.02em] text-white md:text-[40px]">
             Activating your membership…
           </h1>
-          <p className="mt-4 max-w-md text-[16px] text-gray-700">
+          <p className="mt-4 max-w-md text-[16px] text-white/80">
             Payment confirmed. We&apos;re passing you to Learnyst with your
             preferences pre-filled.
           </p>
@@ -140,10 +131,10 @@ export default function HandoffStep() {
               aria-hidden
             />
           </span>
-          <h1 className="font-display mt-6 text-[28px] leading-tight tracking-[-0.02em] text-ink md:text-[40px]">
+          <h1 className="font-display mt-6 text-[28px] leading-tight tracking-[-0.02em] text-white md:text-[40px]">
             You&apos;re set, {name.split(" ")[0] || "friend"}.
           </h1>
-          <p className="mt-4 max-w-md text-[16px] text-gray-700">
+          <p className="mt-4 max-w-md text-[16px] text-white/80">
             Your membership is active.{" "}
             {phase === "redirecting"
               ? "Redirecting you to Learnyst to start learning…"
@@ -195,7 +186,7 @@ export default function HandoffStep() {
 
           <Link
             href="/"
-            className="mt-6 text-[14px] text-gray-500 underline-offset-4 hover:underline"
+            className="mt-6 text-[14px] text-white/60 underline-offset-4 hover:underline"
           >
             Back to home
           </Link>

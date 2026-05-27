@@ -87,6 +87,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    /* Offset in-page anchor targets below the sticky nav (h-[72px]/md:h-20) */
+    scroll-padding-top: 88px;
   }
 
   body {
