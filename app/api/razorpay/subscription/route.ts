@@ -66,10 +66,26 @@ export async function POST(
       currency: subscription.currency,
     });
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : "Failed to create subscription";
+    // Razorpay's Node SDK throws plain objects, not Error instances, so we
+    // unwrap their { statusCode, error: { code, description, … } } shape
+    // before logging — otherwise the message degrades to the fallback string.
     // eslint-disable-next-line no-console
-    console.error("[razorpay] subscription create failed:", message);
+    console.error("[razorpay] subscription create failed:", err);
+    const message = extractErrorMessage(err);
     return NextResponse.json({ ok: false, error: message }, { status: 500 });
   }
+}
+
+function extractErrorMessage(err: unknown): string {
+  if (err && typeof err === "object") {
+    const e = err as {
+      error?: { code?: string; description?: string };
+      message?: string;
+    };
+    if (e.error?.description) {
+      return `${e.error.code ?? "RAZORPAY_ERROR"}: ${e.error.description}`;
+    }
+    if (typeof e.message === "string" && e.message.length > 0) return e.message;
+  }
+  return "Failed to create subscription";
 }
