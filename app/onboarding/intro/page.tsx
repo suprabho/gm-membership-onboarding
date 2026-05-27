@@ -51,13 +51,13 @@ function IntroBody() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: [0.2, 0.7, 0.2, 1] }}
     >
-      <Eyebrow tone="white">Green Mentor Academy</Eyebrow>
+      <Eyebrow tone="white">Greenmentor Plus</Eyebrow>
       <h1 className="font-display mt-8 text-[32px] leading-tight tracking-[-0.02em] text-ink sm:text-[40px] md:text-[48px]">
-        A 60-second tour before we start.
+        The only subscription you need to master anything in ESG.
       </h1>
       <p className="mt-3 max-w-xl text-[16px] leading-relaxed text-gray-700 md:text-[17px]">
-        Swipe through to see who Pro is for, what&apos;s inside, and why members
-        stick around.
+        Courses, live expert sessions, career tools, and a community of 40,000+
+        sustainability professionals — all in one place, for one simple price.
       </p>
 
       <div className="mt-10">
