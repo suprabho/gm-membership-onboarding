@@ -14,6 +14,17 @@ import { track } from "@/lib/utils/analytics";
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-teal-900 text-white">
+      {/* Animated color-blend background — the Aura embed running full-bleed
+          behind the hero. Decorative only: muted opacity, no pointer events,
+          and hidden from assistive tech. */}
+      <iframe
+        title="Green Background – Vibrant & Abstract Website Header Design"
+        src="https://aura.promad.design/embed/green-background-vibrant-abstract-website-header-design?hideText=true"
+        aria-hidden
+        tabIndex={-1}
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full border-0 object-cover opacity-60"
+      />
+
       {/* Wordmark device — the deck's giant outlined `greenmentor` lockup,
           rendered behind body content with color-dodge so it picks up the
           neon tone against the dark teal. */}
@@ -41,18 +52,21 @@ export function Hero() {
           transition={{ duration: 0.6, ease: [0.2, 0.7, 0.2, 1] }}
           className="max-w-5xl"
         >
-          <h1 className="font-display text-[clamp(44px,7.5vw,88px)] leading-[1.05] tracking-[-0.02em] text-white">
+          <h1
+            className="font-display text-center md:text-left text-[clamp(44px,7.5vw,88px)] leading-[1.05] tracking-[-0.02em] text-white"
+            style={{ textShadow: "0 2px 24px rgba(0, 0, 0, 0.35)" }}
+          >
             The only subscription you need to{" "}
             <span className="text-green-500">master anything in ESG.</span>
           </h1>
 
-          <p className="mt-8 max-w-2xl text-[20px] leading-relaxed text-white/85 md:text-[22px]">
+          <p className="mt-8 max-w-2xl text-center md:text-left text-[20px] leading-relaxed text-white/85 md:text-[22px]">
             Courses, live expert sessions, career tools, and a community of
             40,000+ sustainability professionals — all in one place, for one
             simple price.
           </p>
 
-          <div className="mt-10">
+          <div className="flex justify-center md:justify-start mt-10">
             <Button
               asChild
               variant="accent"
@@ -88,7 +102,7 @@ export function Hero() {
           ))}
         </div>
 
-        <div className="mt-12 rounded-md border border-white/10 bg-teal-800/40 p-5 md:p-6 backdrop-blur-3xl">
+        <div className="mt-40 rounded-md border border-white/10 bg-teal-800/40 p-5 md:p-6 backdrop-blur-3xl">
           <p className="gm-eyebrow text-green-100">
             Instructors with experience at
           </p>

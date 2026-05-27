@@ -40,7 +40,7 @@ export function ChoiceCard({
           <Icon
             size={20}
             weight="duotone"
-            className={cn(selected ? "text-green-950" : "text-green-700")}
+            className={cn(selected ? "text-green-950" : "text-green-400")}
             aria-hidden
           />
         </div>
@@ -59,7 +59,14 @@ export function ChoiceCard({
       </div>
 
       <div className="mt-6 space-y-1">
-        <h3 className="text-[20px] font-bold leading-tight text-white">{title}</h3>
+        <h3
+          className={cn(
+            "text-[20px] font-bold leading-tight",
+            selected ? "text-green-950" : "text-white",
+          )}
+        >
+          {title}
+        </h3>
         <p
           className={cn(
             "text-[14px] font-medium",

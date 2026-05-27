@@ -142,11 +142,11 @@ export function IntroCarousel({ cards }: IntroCarouselProps) {
               aria-roledescription="slide"
               aria-label={`${i + 1} of ${cards.length}`}
               className={cn(
-                // Mobile: each card takes ~85% of viewport so a hint of the
+                // Mobile: each card takes ~78% of viewport so more of the
                 // next card peeks in to telegraph "swipeable". `min-w-0`
                 // overrides the flex default (min-content) so the card
                 // actually honors basis instead of growing to fit content.
-                "min-w-0 basis-[85%] shrink-0 snap-center",
+                "min-w-0 basis-[78%] shrink-0 snap-center",
                 "md:basis-auto",
               )}
             >

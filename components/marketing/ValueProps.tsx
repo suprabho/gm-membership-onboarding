@@ -62,7 +62,7 @@ export function ValueProps() {
             </h3>
 
             <div className="mt-6 grid grid-cols-2 gap-4">
-              <div className="rounded-2xl bg-gray-50 p-4">
+              <div className="rounded-sm bg-gray-50 p-4">
                 <p className="text-[12px] font-semibold uppercase tracking-wide text-gray-500">
                   Monthly
                 </p>
@@ -71,7 +71,7 @@ export function ValueProps() {
                 </p>
                 <p className="mt-1 text-[13px] text-gray-500">/ month</p>
               </div>
-              <div className="rounded-2xl bg-green-100 p-4">
+              <div className="rounded-sm bg-green-100 p-4">
                 <p className="text-[12px] font-semibold uppercase tracking-wide text-green-700">
                   Annual
                 </p>
