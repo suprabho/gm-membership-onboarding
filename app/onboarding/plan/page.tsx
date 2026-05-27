@@ -130,7 +130,10 @@ export default function PlanStep() {
           </div>
 
           <p className="mt-5 border-t border-gray-200 pt-5 text-[13px] text-gray-500">
-            {formatINR(plan.priceAnnual * 12)} billed once · works out to{" "}
+            <span className="font-semibold text-ink">
+              {formatINR(plan.priceAnnualTotal)}
+            </span>{" "}
+            billed once a year · works out to{" "}
             {formatINR(plan.priceMonthly - plan.priceAnnual)} saved per month.
           </p>
         </button>

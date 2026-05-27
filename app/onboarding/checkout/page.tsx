@@ -272,7 +272,7 @@ export default function CheckoutStep() {
   const displayAmountPaise =
     subscription?.amountPaise ??
     (billingCycle === "annual"
-      ? plan.priceAnnual * 100
+      ? plan.priceAnnualTotal * 100
       : plan.priceMonthly * 100);
 
   return (
@@ -318,13 +318,21 @@ export default function CheckoutStep() {
             ) : null}
           </div>
 
-          <div className="mt-6 flex items-baseline gap-2 border-t border-gray-200 pt-6">
-            <span className="font-numeral text-[48px] leading-none text-green-700">
-              {formatINR(displayAmountPaise)}
-            </span>
-            <span className="text-[14px] text-gray-500">
-              / month{billingCycle === "annual" ? ", billed yearly" : ""}
-            </span>
+          <div className="mt-6 border-t border-gray-200 pt-6">
+            <div className="flex items-baseline gap-2">
+              <span className="font-numeral text-[48px] leading-none text-green-700">
+                {formatINR(displayAmountPaise)}
+              </span>
+              <span className="text-[14px] text-gray-500">
+                {billingCycle === "annual" ? "/ year" : "/ month"}
+              </span>
+            </div>
+            {billingCycle === "annual" ? (
+              <p className="mt-2 text-[13px] text-gray-500">
+                Billed once a year · works out to{" "}
+                {formatINR(plan.priceAnnual * 100)} / month
+              </p>
+            ) : null}
           </div>
 
           <dl className="mt-6 grid gap-3 text-[14px]">
