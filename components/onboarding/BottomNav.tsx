@@ -22,7 +22,7 @@ export function BottomNav({
   continueLoading = false,
 }: BottomNavProps) {
   return (
-    <div className="mt-12 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="sticky bottom-0 z-30 -mx-6 mt-12 flex flex-col-reverse gap-3 border-t border-gray-200 bg-white/90 px-6 py-4 backdrop-blur sm:flex-row sm:items-center sm:justify-between md:-mx-8 md:px-8">
       {backHref ? (
         <Button
           asChild

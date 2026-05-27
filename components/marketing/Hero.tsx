@@ -55,7 +55,7 @@ export function Hero() {
             simple price.
           </p>
 
-          <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+          <div className="mt-10">
             <Button
               asChild
               variant="accent"
@@ -63,9 +63,6 @@ export function Hero() {
               iconRight={<ArrowRight size={18} weight="bold" />}
             >
               <Link href="/onboarding/intro">Start for ₹4,000 / month</Link>
-            </Button>
-            <Button asChild variant="ghost-dark" size="lg">
-              <Link href="/pricing">Annual plan · ₹44,000 / year</Link>
             </Button>
           </div>
         </motion.div>
